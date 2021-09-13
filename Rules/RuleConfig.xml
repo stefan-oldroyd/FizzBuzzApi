@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleCollection>
+	<Rule>
+		<Id>1</Id>
+		<Code>LIVE</Code>
+		<Description>Live</Description>
+		<Multiple>3</Multiple>
+		<ResultField>Description</ResultField>
+	</Rule>
+	<Rule>
+		<Id>2</Id>
+		<Code>NATION</Code>
+		<Description>Nation</Description>
+		<Multiple>5</Multiple>
+		<ResultField>Description</ResultField>
+	</Rule>
+	<Rule>
+		<Id>3</Id>
+		<Code>DEFAULT</Code>
+		<Description>Integer</Description>
+		<Multiple>0</Multiple>
+		<ResultField>Value</ResultField>
+	</Rule>
+</RuleCollection>
