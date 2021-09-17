@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using FizzBuzz;
+using FluentAssertions;
 
 namespace UnitTests
 {
@@ -43,16 +44,13 @@ namespace UnitTests
             string liveNationSummary = result.summary["LiveNation"];
             string defaultSummary = result.summary["Integer"];
 
-            Assert.IsTrue(result.result == expectedResult);
-            Assert.IsTrue(result.summary.Count == 4);
+            result.result.Should().Be(expectedResult);
+            result.summary.Count.Should().Be(4);
 
-            Assert.IsTrue(liveSummary == "5");
-
-            Assert.IsTrue(nationSummary == "3");
-
-            Assert.IsTrue(liveNationSummary == "1");
-
-            Assert.IsTrue(defaultSummary == "11");
+            liveSummary.Should().Be("5");
+            nationSummary.Should().Be("3");
+            liveNationSummary.Should().Be("1");
+            defaultSummary.Should().Be("11");
         }
 
         [Test]
@@ -73,15 +71,11 @@ namespace UnitTests
             string defaultSummary = summary["Integer"];
 
             //Assert
-            Assert.IsTrue(summary.Count == 4);
-
-            Assert.IsTrue(liveSummary == "5");
-
-            Assert.IsTrue(nationSummary == "3");
-
-            Assert.IsTrue(liveNationSummary == "1");
-
-            Assert.IsTrue(defaultSummary == "11");
+            summary.Count.Should().Be(4);
+            liveSummary.Should().Be("5");
+            nationSummary.Should().Be("3");
+            liveNationSummary.Should().Be("1");
+            defaultSummary.Should().Be("11");
         }
 
         [Test]
@@ -97,7 +91,7 @@ namespace UnitTests
             var resultText = rulesEngine.ResultText;
 
             //Assert
-            Assert.IsTrue(resultText == expectedResult);
+            resultText.Should().Be(expectedResult);
         }
 
         [Test]
@@ -121,8 +115,7 @@ namespace UnitTests
             var result = fizzBuzz.Result;
 
             //Assert
-            
-            Assert.IsTrue(result.result == expectedResult);
+            result.result.Should().Be(expectedResult);
         }
     }
 }

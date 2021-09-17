@@ -3,6 +3,7 @@ using FizzBuzzApi.Controllers;
 using FizzBuzz;
 using System.Collections.Generic;
 using Moq;
+using FluentAssertions;
 
 namespace UnitTests
 {
@@ -36,8 +37,8 @@ namespace UnitTests
             IFizzBuzzResult result = controller.Get(1, 20);
 
             //ASSERT
-            Assert.IsTrue(result.result == expectedResult);
-            Assert.IsTrue(result.summary == FizzBuzzSummary);
+            result.result.Should().Be(expectedResult);
+            result.summary.Should().Equal(FizzBuzzSummary);
         }
 
         [Test]
@@ -55,8 +56,8 @@ namespace UnitTests
             IFizzBuzzResult result = controller.Get(1, 20);
 
             //ASSERT
-            Assert.IsTrue(result.result == expectedResult);
-            Assert.IsTrue(result.summary == FizzBuzzSummary);
+            result.result.Should().Be(expectedResult);
+            result.summary.Should().Equal(FizzBuzzSummary);
         }
 
         [Test]
@@ -73,9 +74,10 @@ namespace UnitTests
             controller.FizzBuzzCalculator = fizzBuzz.Object;
             IFizzBuzzResult result = controller.Get(20, 1);
             const string invalidInputs = "Invalid Inputs: Please ensure they are all > than 0 and also max is > min";
+            
             //ASSERT
-            Assert.IsTrue(result.result == invalidInputs);
-            Assert.IsTrue(result.summary is null);
+            result.result.Should().Be(invalidInputs);
+            result.summary.Should().BeNull();
         }
     }
 }
