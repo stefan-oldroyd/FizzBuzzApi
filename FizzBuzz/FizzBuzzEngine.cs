@@ -9,11 +9,13 @@ namespace FizzBuzz
     public class FizzBuzzEngine : IFizzBuzzEngine
     {
         private readonly IRuleProvider Provider;
+        private readonly IRuleStrategy Strategy;
 
-        public FizzBuzzEngine(IRuleProvider provider)
+        public FizzBuzzEngine(IRuleProvider provider, IRuleStrategy strategy)
         {   
             //provider passed on constructor so we can be easily substitued for e.g Entity Framework as is loosely coupled.
             Provider = provider;
+            Strategy = strategy;
             InitialiseRuleSummaries();
         }
         public Dictionary<string,string> Summary
@@ -84,9 +86,8 @@ namespace FizzBuzz
             }
         }
 
-        public bool Execute(int min, int max)
+        public IFizzBuzzResult Execute(int min, int max)
         {
-            bool success = false;
             var resultText = new StringBuilder("");
 
             for (int curValue = min; curValue <= max; curValue++)
@@ -97,8 +98,8 @@ namespace FizzBuzz
 
                 foreach (IRule rule in Provider.Rules)
                 {
-                    curText.Append(EvaluateRule(rule, ref rulePassed, curValue, ref passedCode));
-                    curText.Append(EvaluateDefaultRule(rule, rulePassed, curValue));
+                    curText.Append(Strategy.EvaluateRule(rule, ref rulePassed, curValue, ref passedCode));
+                    curText.Append(Strategy.EvaluateDefaultRule(rule, rulePassed, curValue));
                 }
 
                 resultText.Append(curText + " ");
@@ -107,54 +108,7 @@ namespace FizzBuzz
 
             _ResultText = resultText.ToString();
 
-            return success;
+            return new FizzBuzzResult() { result = ResultText, summary = Summary } ;
         }
-
-        private string EvaluateRule(IRule rule, ref bool rulePassed, int curValue, ref string passedCode)
-        {
-            string resultValue = "";
-            const int noRemainder = 0;
-
-            if (rule.Multiple > 0 && curValue % rule.Multiple == noRemainder)
-            {
-                resultValue = GetResultValue(rule, curValue);
-                passedCode += rule.Code;
-                rulePassed = true;
-            }
-
-            return resultValue;
-        }
-
-        private string EvaluateDefaultRule(IRule rule, bool rulePassed, int curValue)
-        {
-            string resultValue = "";
-
-            if ((!rulePassed && rule.Code.ToUpper() == "DEFAULT"))
-            {
-                resultValue = GetResultValue(rule, curValue);
-            }
-
-            return resultValue;
-        }
-
-        private string GetResultValue(IRule rule, int curValue)
-        {
-            string resultField = rule.FieldDictionary["ResultField"];
-            string resultValue;
-
-            if (!rule.FieldDictionary.Keys.Contains(resultField))
-            {   
-                //dynamic way of outputting a column to make more flexible
-                resultValue = curValue.ToString();
-            }
-            else
-            {   
-                //returns the integer for the default value
-                resultValue = rule.FieldDictionary[resultField];
-            }
-
-            return resultValue;
-        }
-
     }
 }

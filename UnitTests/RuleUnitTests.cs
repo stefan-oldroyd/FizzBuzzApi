@@ -88,5 +88,60 @@ namespace UnitTests
             nationRule.Should().Equals(Rules.Single(x => x.Code == "NATION"));
             defaultRule.Should().Equals(Rules.Single(x => x.Code == "DEFAULT"));
         }
+
+        [Test]
+        public void GetDefaultLogicFromStrategy()
+        {
+            //Arrange
+            var ruleProvider = new RuleProvider();
+            List<IRule> rules = ruleProvider.Rules;
+
+            var defaultRule = rules.Single(x => x.Code == "DEFAULT");
+
+            var ruleStrategy = new RuleStrategy();
+
+            //Act
+            string result = ruleStrategy.EvaluateDefaultRule(defaultRule, true, 0);
+
+            //Assert
+            result.Should().Be("");
+        }
+
+        [Test]
+        public void GetLiveLogicFromStrategy()
+        {
+            //Arrange
+            var ruleProvider = new RuleProvider();
+            List<IRule> rules = ruleProvider.Rules;
+
+
+
+            var liveRule = rules.Single(x => x.Code == "LIVE");
+           
+            var ruleStrategy = new RuleStrategy();
+
+            //Act
+            string result = ruleStrategy.EvaluateDefaultRule(liveRule, true, 0);
+
+            //Assert
+            result.Should().Be("");
+        }
+
+        [Test]
+        public void GetNationLogicFromStrategy()
+        {
+            //Arrange
+            var ruleProvider = new RuleProvider();
+            List<IRule> rules = ruleProvider.Rules;
+
+            var nationRule = rules.Single(x => x.Code == "NATION");
+            var ruleStrategy = new RuleStrategy();
+
+            //Act
+            string result = ruleStrategy.EvaluateDefaultRule(nationRule, true, 0);
+
+            //Assert
+            result.Should().Be("");
+        }
     }
 }

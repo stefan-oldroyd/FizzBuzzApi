@@ -59,9 +59,10 @@ namespace UnitTests
             //Arrange
             var ruleProvider = new Mock<IRuleProvider>();
             ruleProvider.Setup(m => m.Rules).Returns(Rules);
+            var ruleStrategy = new RuleStrategy();
 
             //Act
-            var engine = new FizzBuzzEngine(ruleProvider.Object);
+            var engine = new FizzBuzzEngine(ruleProvider.Object, ruleStrategy);
             engine.Execute(1, 20);
             Dictionary<string,string> summary = engine.Summary;
 
@@ -84,9 +85,10 @@ namespace UnitTests
             //Arrange
             var ruleProvider = new Mock<IRuleProvider>();
             ruleProvider.Setup(m => m.Rules).Returns(Rules);
+            var ruleStrategy = new RuleStrategy();
 
             //Act
-            var rulesEngine = new FizzBuzzEngine(ruleProvider.Object);
+            var rulesEngine = new FizzBuzzEngine(ruleProvider.Object, ruleStrategy);
             rulesEngine.Execute(1, 20);
             var resultText = rulesEngine.ResultText;
 
@@ -95,24 +97,49 @@ namespace UnitTests
         }
 
         [Test]
-        public void FizzBuzz()
+        public void FizzBuzzCalculator()
         {
             //Arrange
             var ruleProvider = new Mock<IRuleProvider>();
             ruleProvider.Setup(m => m.Rules).Returns(Rules);
 
             var engine = new Mock<IFizzBuzzEngine>();
-  
-            engine.Setup(m => m.ResultText).Returns(expectedResult);
-            engine.Setup(m => m.Summary).Returns(FizzBuzzSummary);
+            var EngineResult = new FizzBuzzResult() { result = expectedResult, summary = FizzBuzzSummary };
+
+            var context = new Mock<IFizzBuzzContext>();
+            context.Setup(m => m.Result).Returns(EngineResult);
 
             //Act
-            var fizzBuzz = new FizzBuzzCalculator();
-            fizzBuzz.Provider = ruleProvider.Object;
-            fizzBuzz.Engine = engine.Object;
-            fizzBuzz.Execute(1, 20);
+            var calculator = new FizzBuzzCalculator();
+            calculator.Context = context.Object;
 
-            var result = fizzBuzz.Result;
+            calculator.Execute(1, 20);
+
+            var result = calculator.Result;
+
+            //Assert
+            result.result.Should().Be(expectedResult);
+        }
+
+        [Test]
+        public void FizzBuzzContext()
+        {
+            //Arrange
+            var ruleProvider = new Mock<IRuleProvider>();
+            ruleProvider.Setup(m => m.Rules).Returns(Rules);
+
+            var engine = new Mock<IFizzBuzzEngine>();
+
+            engine.Setup(m => m.Execute(1,20)).Returns(new FizzBuzzResult() { result = expectedResult, summary = FizzBuzzSummary });
+
+            //Act
+            var context = new FizzBuzzContext();
+            context.Provider = ruleProvider.Object;
+            context.Engine = engine.Object;
+            context.Strategy = new RuleStrategy();
+            context.Execute(1, 20);
+
+            var result = context.Result;
 
             //Assert
             result.result.Should().Be(expectedResult);

@@ -1,5 +1,4 @@
 ﻿using Rules;
-using System.Linq;
 
 namespace FizzBuzz
 {
@@ -7,48 +6,34 @@ namespace FizzBuzz
     {
         public IFizzBuzzResult Result { get; set; }
 
-        public IRuleProvider Provider
+        public IFizzBuzzContext Context
         {
             get
             {
-                if (_Provider == null)
+
+                if (_Context == null)
                 {
-                    _Provider = new RuleProvider();
+                    var context = new FizzBuzzContext();
+                    context.Provider = new RuleProvider();
+                    context.Strategy = new RuleStrategy();
+
+                    _Context = context;
                 }
 
-                return _Provider;
-            }
-            set
-            {
-                _Provider = value;
-            }
-        }
+                return _Context;
 
-        public IFizzBuzzEngine Engine
-        {
-            get
-            {
-                if (_Engine == null)
-                {
-                    _Engine = new FizzBuzzEngine(Provider);
+            }
+            set {
+                _Context = value;
                 }
-
-                return _Engine;
-            }
-            set
-            {
-                _Engine = value;
-            }
         }
-
-        private IFizzBuzzEngine _Engine;
-        private IRuleProvider _Provider;
-
+            
+        private  IFizzBuzzContext _Context;
         public void Execute(int min, int max)
         {
-            Engine.Execute(min, max);
+            Context.Execute(min, max);
 
-            Result = new FizzBuzzResult() { result = Engine.ResultText, summary = Engine.Summary };
+            Result = new FizzBuzzResult() { result = Context.Result.result, summary = Context.Result.summary };
         }
     }
 }
