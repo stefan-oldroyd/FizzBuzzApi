@@ -65,8 +65,11 @@ The Solution Showcases:
 
 #########
 In order to run the appliction you will need to do an entity framework migration to generate the SQLLite db. Build the solution and run the following commands in the package manager console in visual studio:
+
 Add-Migration InitialCreate
+
 Update-Database
+
 
 This creates a sqllite db here:
 C:\Users\<<User Name>>\AppData\Local
