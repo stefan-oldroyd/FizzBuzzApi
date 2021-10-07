@@ -3,12 +3,14 @@ using Rules;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Moq;
+using Microsoft.EntityFrameworkCore;
 
 namespace UnitTests
 {
     public class RuleUnitTest
     {   
-        private List<IRule> Rules;
+        private List<Rule> Rules;
         private Rule LiveRule;
         private Rule NationRule;
         private Rule DefaultRule;
@@ -16,7 +18,7 @@ namespace UnitTests
         [SetUp]
         public void Setup()
         {
-            Rules = new List<IRule>();
+            Rules = new List<Rule>();
             Rules.Add(new Rule() { Id = 1, Code = "LIVE", Description = "Live", Multiple = 3, ResultField = "Description" });
             Rules.Add(new Rule() { Id = 2, Code = "NATION", Description = "Nation", Multiple = 5, ResultField = "Description" });
             Rules.Add(new Rule() { Id = 3, Code = "DEFAULT", Description = "Integer", Multiple = 0, ResultField = "Value" });
@@ -87,6 +89,66 @@ namespace UnitTests
             liveRule.Should().Equals(Rules.Single(x => x.Code == "LIVE"));
             nationRule.Should().Equals(Rules.Single(x => x.Code == "NATION"));
             defaultRule.Should().Equals(Rules.Single(x => x.Code == "DEFAULT"));
+        }
+
+        [Test]
+        public void GetRulesFromEFProvider()
+        {
+            //Arrange
+            var ruleProvider = new EFRuleProvider();
+
+            var data = Rules.AsQueryable();
+
+            var mockSet = new Mock<DbSet<Rule>>();
+            mockSet.As<IQueryable<Rule>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<Rule>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<Rule>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<Rule>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+            var mockContext = new Mock<IRuleContext>();
+            mockContext.Setup(c => c.Rules).Returns(mockSet.Object);
+            ruleProvider.RuleContext = mockContext.Object;
+
+            //Act
+            List<IRule> rules = ruleProvider.Rules;
+
+            //Assert
+            var liveRule = rules.Single(x => x.Code == "LIVE");
+            var nationRule = rules.Single(x => x.Code == "NATION");
+            var defaultRule = rules.Single(x => x.Code == "DEFAULT");
+
+            rules.Count.Should().Be(3);
+            liveRule.Should().Equals(Rules.Single(x => x.Code == "LIVE"));
+            nationRule.Should().Equals(Rules.Single(x => x.Code == "NATION"));
+            defaultRule.Should().Equals(Rules.Single(x => x.Code == "DEFAULT"));
+        }
+
+        [Test]
+        public void RuleFactoryTestsXML()
+        {
+            //Arrange
+            var ruleProviderFactory = new RuleProviderFactory(ProviderTypes.XML);
+
+            //Act
+
+            var result = ruleProviderFactory.Provider();
+
+            //Assert
+            result.Should().BeOfType(new RuleProvider().GetType());
+        }
+
+        [Test]
+        public void RuleFactoryTestsEF()
+        {
+            //Arrange
+            var ruleProviderFactory = new RuleProviderFactory(ProviderTypes.EntityFramework);
+
+            //Act
+
+            var result = ruleProviderFactory.Provider();
+
+            //Assert
+            result.Should().BeOfType(new EFRuleProvider().GetType());
         }
 
         [Test]

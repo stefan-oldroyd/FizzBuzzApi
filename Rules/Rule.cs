@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rules
 {
@@ -22,7 +23,7 @@ namespace Rules
         [XmlElement("ResultField")]
         public string ResultField { get; set; }
 
-        [XmlIgnore]
+        [XmlIgnore, NotMapped]
         public Dictionary<string, string> FieldDictionary
         {
             get

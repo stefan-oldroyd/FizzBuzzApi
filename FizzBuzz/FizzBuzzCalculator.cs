@@ -14,7 +14,9 @@ namespace FizzBuzz
                 if (_Context == null)
                 {
                     var context = new FizzBuzzContext();
-                    context.Provider = new RuleProvider();
+                    
+                    //TODO extend API to control provider type
+                    context.Provider = new RuleProviderFactory(ProviderTypes.EntityFramework).Provider();
                     context.Strategy = new RuleStrategy();
 
                     _Context = context;
