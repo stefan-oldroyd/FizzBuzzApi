@@ -72,6 +72,6 @@ Update-Database
 
 
 This creates a sqllite db here:
-C:\Users\<<User Name>>\AppData\Local
+C:\Users\_User Name_\AppData\Local
 
 
