@@ -25,6 +25,9 @@ namespace Rules
                 case ProviderTypes.XML:
                     return new RuleProvider();
 
+                case ProviderTypes.Dapper:
+                    return new DapperRuleProvider();
+
                 default:
                     return new RuleProvider();
             }
@@ -34,6 +37,7 @@ namespace Rules
     public enum ProviderTypes
     {
         EntityFramework,
-        XML
+        XML,
+        Dapper
     }
 }
