@@ -33,14 +33,15 @@ namespace Rules
 
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\RuleConfig.xml";
 
-            var serializer = new XmlSerializer(typeof(RuleCollection));
-
+            RuleCollection ruleCollection; 
             //Needed for garbage disposal as implements idisposible an unmanaged code
             using (var reader = new StreamReader(path))
-            {   
-                var ruleCollection = (RuleCollection)serializer.Deserialize(reader);
-                rules = ruleCollection.Items.ToList<IRule>();
+            {
+                var serializer = new XmlSerializer(typeof(RuleCollection));
+                ruleCollection = (RuleCollection)serializer.Deserialize(reader);
             };
+
+            rules = ruleCollection.Items.ToList<IRule>();
 
             return rules;
         }

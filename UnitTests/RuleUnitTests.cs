@@ -199,10 +199,7 @@ namespace UnitTests
         public void GetDefaultLogicFromStrategy()
         {
             //Arrange
-            var ruleProvider = new RuleProvider();
-            List<IRule> rules = ruleProvider.Rules;
-
-            var defaultRule = rules.Single(x => x.Code == "DEFAULT");
+            var defaultRule = Rules.Single(x => x.Code == "DEFAULT");
 
             var ruleStrategy = new RuleStrategy();
 
@@ -217,12 +214,7 @@ namespace UnitTests
         public void GetLiveLogicFromStrategy()
         {
             //Arrange
-            var ruleProvider = new RuleProvider();
-            List<IRule> rules = ruleProvider.Rules;
-
-
-
-            var liveRule = rules.Single(x => x.Code == "LIVE");
+            var liveRule = Rules.Single(x => x.Code == "LIVE");
            
             var ruleStrategy = new RuleStrategy();
 
@@ -237,10 +229,7 @@ namespace UnitTests
         public void GetNationLogicFromStrategy()
         {
             //Arrange
-            var ruleProvider = new RuleProvider();
-            List<IRule> rules = ruleProvider.Rules;
-
-            var nationRule = rules.Single(x => x.Code == "NATION");
+            var nationRule = Rules.Single(x => x.Code == "NATION");
             var ruleStrategy = new RuleStrategy();
 
             //Act

@@ -62,9 +62,6 @@ namespace Rules
                     @"SELECT Id, Code, Description, Multiple, ResultField FROM Rules").ToList();
             };
 
-            //rules.Select(x=> x.Id) as List<Rules.IRule>
-            //rules.ConvertAll(o => (Rules.IRule)o);
-
             return rules.ConvertAll(o => (Rules.IRule)o);
         }
     }
