@@ -25,6 +25,11 @@ namespace Rules
 
                 return rules;
             }
+
+            set
+            {
+                rules = value;
+            }
         }
 
         private List<Rules.IRule> GetRules()

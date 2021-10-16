@@ -80,9 +80,10 @@ namespace UnitTests
         public void GetRulesFromProvider()
         {
             //Arrange
-
-            //Act
             var ruleProvider = new RuleProvider();
+
+            ruleProvider.Rules = Rules.ConvertAll(o => (Rules.IRule)o);
+
             List<IRule> rules = ruleProvider.Rules;
 
             var liveRule = rules.Single(x => x.Code == "LIVE");
